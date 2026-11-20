@@ -124,7 +124,7 @@ export function FulfillmentModal({
               <div className="flex items-center justify-between">
                 <p className="text-xs font-semibold text-stone-700">Delivery Address</p>
                 <span className="text-xs font-medium text-[#2F6B3B]">
-                  {isRoxaPass ? 'Roxa Pass: $0 Delivery' : '$3.50 insulated courier'}
+                  {isRoxaPass ? 'Belly Good Pass: $0 Delivery' : '$3.50 insulated courier'}
                 </span>
               </div>
               <div className="space-y-2">

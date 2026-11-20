@@ -76,7 +76,7 @@ export function ClubMembershipView({
         <section className="bg-white rounded-3xl border border-stone-200 p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-6 space-y-5">
             <div>
-              <p className="text-xs font-semibold text-[#3B1248]">Roxa Ritual Club &amp; Roxa Pass</p>
+              <p className="text-xs font-semibold text-[#3B1248]">Belly Belly Good Club &amp; Pass</p>
               <h1 className="font-display text-3xl sm:text-4xl font-semibold text-[#1C181F] mt-1.5 leading-tight [text-wrap:balance]">
                 Make your weekly açai effortless — and stop paying full guest prices.
               </h1>
@@ -135,7 +135,7 @@ export function ClubMembershipView({
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-[#1C181F] inline-flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-[#3B1248]" />
-                    <span>Roxa Pass</span>
+                    <span>Belly Good Pass</span>
                   </span>
                   <span className="font-mono text-xs font-semibold text-[#3B1248] tabular-nums">
                     $14.90/mo
@@ -251,7 +251,7 @@ export function ClubMembershipView({
               <UserPlus className="w-4 h-4" />
               <span>
                 {signupPlan === 'pass'
-                  ? 'Join Roxa Pass ($14.90/mo) & Unlock Perks'
+                  ? 'Join Belly Good Pass ($14.90/mo) & Unlock Perks'
                   : 'Join Free & Claim $3.00 Welcome Credit'}
               </span>
             </button>
@@ -273,7 +273,7 @@ export function ClubMembershipView({
           <div>
             <div className="flex flex-wrap items-center gap-2 text-xs text-stone-500">
               <span className="font-semibold text-[#3B1248]">
-                {member.isRoxaPass ? 'Roxa Pass Member' : `${member.tier} Tier`}
+                {member.isRoxaPass ? 'Belly Good Pass Member' : `${member.tier} Tier`}
               </span>
               <span aria-hidden="true">·</span>
               <span>Member since {member.memberSince}</span>
@@ -319,7 +319,7 @@ export function ClubMembershipView({
             )}
 
             <p className="text-sm text-stone-600 mt-2 max-w-xl">
-              Recognized across all 3 Roxa Açai Houses. Member pricing is automatically active on every bowl and bundle.
+              Recognized across all 3 Belly Belly Good Açai Houses. Member pricing is automatically active on every bowl and bundle.
             </p>
           </div>
 
@@ -458,18 +458,18 @@ export function ClubMembershipView({
         </section>
       </div>
 
-      {/* Roxa Pass Upgrade */}
+      {/* Belly Good Pass Upgrade */}
       <section className="bg-white rounded-3xl border border-stone-200 p-6 sm:p-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div className="lg:col-span-8 space-y-3">
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#3B1248]">
               <Sparkles className="w-4 h-4" />
-              <span>Roxa Pass Upgrade · $14.90 / month</span>
+              <span>Belly Good Pass Upgrade · $14.90 / month</span>
             </div>
             <h2 className="font-display text-2xl sm:text-3xl font-semibold text-[#1C181F]">
               {member.isRoxaPass
-                ? 'Your Roxa Pass is Active'
-                : 'Upgrade to Roxa Pass — pays for itself in 1 bowl + 1 delivery'}
+                ? 'Your Belly Good Pass is Active'
+                : 'Upgrade to Belly Good Pass — pays for itself in 1 bowl + 1 delivery'}
             </h2>
             <p className="text-sm text-stone-600 leading-relaxed max-w-2xl">
               Includes one complimentary signature bowl every month ($13.50 value), $0 delivery on every order, priority 6-minute cold-blend queue, and one monthly Streak Shield.
@@ -488,7 +488,7 @@ export function ClubMembershipView({
             >
               <ShieldCheck className="w-4 h-4" />
               <span>
-                {member.isRoxaPass ? 'Roxa Pass Active (Pause)' : 'Upgrade to Roxa Pass · $14.90/mo'}
+                {member.isRoxaPass ? 'Belly Good Pass Active (Pause)' : 'Upgrade to Belly Good Pass · $14.90/mo'}
               </span>
             </button>
           </div>

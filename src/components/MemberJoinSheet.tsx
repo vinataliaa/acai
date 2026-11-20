@@ -59,7 +59,7 @@ export function MemberJoinSheet({
       className="fixed inset-0 z-50 flex items-end lg:items-center justify-center bg-black/50 backdrop-blur-xs"
       role="dialog"
       aria-modal="true"
-      aria-label="Join Roxa Ritual Club"
+      aria-label="Join Belly Belly Good Club"
     >
       <div className="w-full lg:max-w-lg bg-[#FAF9F6] rounded-t-3xl lg:rounded-3xl border border-stone-200 max-h-[92vh] flex flex-col overflow-hidden">
         <div className="lg:hidden pt-3 pb-1 flex justify-center bg-white">
@@ -68,7 +68,7 @@ export function MemberJoinSheet({
 
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-stone-200 bg-white">
           <div>
-            <p className="text-xs font-semibold text-[#3B1248]">Roxa Ritual Membership</p>
+            <p className="text-xs font-semibold text-[#3B1248]">Belly Belly Good Membership</p>
             <h2 className="font-display text-xl font-semibold text-[#1C181F]">
               Join in 10 Seconds
             </h2>
@@ -144,7 +144,7 @@ export function MemberJoinSheet({
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[#1C181F] inline-flex items-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5 text-[#3B1248]" />
-                  <span>Roxa Pass</span>
+                  <span>Belly Good Pass</span>
                 </span>
                 <span className="font-mono text-xs font-semibold text-[#3B1248] tabular-nums">
                   $14.90/mo
@@ -223,7 +223,7 @@ export function MemberJoinSheet({
             className="w-full min-h-[48px] px-5 rounded-xl bg-[#3B1248] text-white text-sm font-semibold hover:bg-[#260A30] active:scale-[0.99] transition-all cursor-pointer"
           >
             {plan === 'pass'
-              ? 'Join Roxa Pass & Unlock Free Bowl'
+              ? 'Join Belly Good Pass & Unlock Free Bowl'
               : 'Join Free & Claim $3.00 Welcome Credit'}
           </button>
 

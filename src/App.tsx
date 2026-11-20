@@ -28,7 +28,7 @@ import {
   OrderRecord,
 } from './types/acai';
 
-const STORAGE_KEY = 'roxa_acai_state_v2';
+const STORAGE_KEY = 'belly_belly_good_state_v1';
 
 interface PersistedState {
   member: MemberProfile;
@@ -516,7 +516,7 @@ export default function App() {
 
       <footer className="hidden lg:block border-t border-stone-200/80 bg-white/60 py-6">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between text-xs text-stone-500">
-          <span>Roxa Açai House · Wild-harvested Cametá Grade-A Açai</span>
+          <span>Belly Belly Good · Wild-harvested Cametá Grade-A Açai</span>
           <span>Dine In · Collect in Store · Insulated Delivery</span>
         </div>
       </footer>

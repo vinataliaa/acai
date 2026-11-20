@@ -35,9 +35,9 @@ export function TopBar({
         <button
           type="button"
           onClick={() => onSelectTab('order')}
-          className="font-display text-2xl font-bold tracking-tight text-[#1C181F] whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#3B1248]"
+          className="font-display text-xl font-bold tracking-tight text-[#1C181F] whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#3B1248]"
         >
-          Roxa
+          Belly Belly Good
         </button>
 
         <nav className="flex items-center gap-7 text-sm font-medium text-stone-600" aria-label="Main navigation">
@@ -73,7 +73,7 @@ export function TopBar({
               activeTab === 'club' ? 'text-[#3B1248] font-semibold underline decoration-2 underline-offset-8' : ''
             }`}
           >
-            Roxa Club
+            Club
           </button>
         </nav>
 
@@ -96,9 +96,9 @@ export function TopBar({
         <button
           type="button"
           onClick={() => onSelectTab('order')}
-          className="font-display text-xl font-bold tracking-tight text-[#1C181F] whitespace-nowrap shrink-0 min-h-[44px] flex items-center"
+          className="font-display text-lg font-bold tracking-tight text-[#1C181F] whitespace-nowrap shrink-0 min-h-[44px] flex items-center"
         >
-          Roxa
+          Belly Belly Good
         </button>
 
         <button

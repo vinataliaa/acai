@@ -115,7 +115,7 @@ export function BowlBuilderView({
           Craft &amp; Name Your Own Blend
         </h1>
         <p className="text-sm text-stone-600 mt-1">
-          Build your exact texture and flavor balance. Save it to your Roxa Club profile for 10% member pricing and 1-tap pre-orders.
+          Build your exact texture and flavor balance. Save it to your Belly Belly Good Club profile for 10% member pricing and 1-tap pre-orders.
         </p>
       </div>
 

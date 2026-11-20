@@ -13,7 +13,7 @@ import {
 export const STORE_LOCATIONS: StoreLocation[] = [
   {
     id: 'hayes',
-    name: 'Roxa Hayes Valley',
+    name: 'Belly Belly Good · Hayes Valley',
     neighborhood: 'Octavia & Linden',
     address: '418 Octavia St, San Francisco',
     prepMinutes: 8,
@@ -22,7 +22,7 @@ export const STORE_LOCATIONS: StoreLocation[] = [
   },
   {
     id: 'marina',
-    name: 'Roxa Marina Green',
+    name: 'Belly Belly Good · Marina Green',
     neighborhood: 'Chestnut St',
     address: '2140 Chestnut St, San Francisco',
     prepMinutes: 10,
@@ -31,7 +31,7 @@ export const STORE_LOCATIONS: StoreLocation[] = [
   },
   {
     id: 'mission',
-    name: 'Roxa Valencia Bar',
+    name: 'Belly Belly Good · Valencia Bar',
     neighborhood: 'Mission District',
     address: '892 Valencia St, San Francisco',
     prepMinutes: 9,

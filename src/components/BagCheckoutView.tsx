@@ -309,7 +309,7 @@ export function BagCheckoutView({
         <h1 className="font-display text-2xl font-semibold text-[#1C181F]">Your Bag is Empty</h1>
         <p className="text-sm text-stone-600">
           {!member.isSignedUp
-            ? 'Join Roxa Ritual Club free for $3.00 welcome credit and lower member pricing on your first bowl.'
+            ? 'Join Belly Belly Good Club free for $3.00 welcome credit and lower member pricing on your first bowl.'
             : member.welcomeCredit > 0
               ? `You have $${member.welcomeCredit.toFixed(2)} welcome credit ready to use on your next pre-order.`
               : 'Pick a cold-spun signature bowl or craft your own personal identity blend.'}
@@ -498,7 +498,7 @@ export function BagCheckoutView({
                     You&rsquo;re leaving ${guestMissedInstantSavings.toFixed(2)} on this order
                   </div>
                   <p className="text-xs text-stone-700 mt-1 leading-relaxed tabular-nums">
-                    Join Roxa Club free in 10 seconds to immediately drop your total by{' '}
+                    Join Belly Belly Good Club free in 10 seconds to immediately drop your total by{' '}
                     <strong>${guestMissedInstantSavings.toFixed(2)}</strong> ($3.00 welcome credit + ${memberPricingDiff.toFixed(2)} member pricing) and earn Stamp #1.
                   </p>
                 </div>
@@ -522,7 +522,7 @@ export function BagCheckoutView({
                 <div>
                   <div className="text-xs font-semibold text-[#1C181F] inline-flex items-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#3B1248]" />
-                    <span>Or start Roxa Pass · $14.90/mo</span>
+                    <span>Or start Belly Good Pass · $14.90/mo</span>
                   </div>
                   <p className="text-[11px] text-stone-500 mt-0.5">
                     Covers up to $13.50 on this bowl + $0 delivery today
@@ -532,7 +532,7 @@ export function BagCheckoutView({
                   type="button"
                   onClick={() =>
                     onOpenJoinSheet(
-                      'Start Roxa Pass to get up to $13.50 off this bowl + $0 delivery immediately',
+                      'Start Belly Good Pass to get up to $13.50 off this bowl + $0 delivery immediately',
                       Math.min(13.5, subtotal) + rawDeliveryFee,
                       'pass'
                     )
@@ -583,7 +583,7 @@ export function BagCheckoutView({
                       />
                       <div>
                         <div className="text-xs font-semibold text-[#1C181F]">
-                          Claim Monthly Roxa Pass Free Bowl
+                          Claim Monthly Belly Good Pass Bowl
                         </div>
                         <div className="text-[11px] text-stone-500 mt-0.5">
                           Covers up to $13.50 · $0 delivery active
@@ -600,7 +600,7 @@ export function BagCheckoutView({
                   <div>
                     <div className="text-xs font-semibold text-[#1C181F] inline-flex items-center gap-1">
                       <ShieldCheck className="w-3.5 h-3.5 text-[#3B1248]" />
-                      <span>Upgrade to Roxa Pass · $14.90/mo</span>
+                      <span>Upgrade to Belly Good Pass · $14.90/mo</span>
                     </div>
                     <p className="text-[11px] text-stone-500 mt-0.5">
                       Get 1 free bowl ($13.50) + $0 delivery + Streak Shield
@@ -610,7 +610,7 @@ export function BagCheckoutView({
                     type="button"
                     onClick={() =>
                       onOpenJoinSheet(
-                        'Upgrade to Roxa Pass for 1 free bowl + $0 delivery',
+                        'Upgrade to Belly Good Pass for 1 free bowl + $0 delivery',
                         Math.min(13.5, subtotal) + rawDeliveryFee,
                         'pass'
                       )
@@ -632,7 +632,7 @@ export function BagCheckoutView({
                 [
                   { id: 'apple-pay', label: 'Apple Pay' },
                   { id: 'card', label: 'Visa ·· 4242' },
-                  { id: 'wallet', label: 'Roxa Pay' },
+                  { id: 'wallet', label: 'BBG Pay' },
                 ] as const
               ).map((pm) => (
                 <button
@@ -668,13 +668,13 @@ export function BagCheckoutView({
               <div className="flex items-center justify-between text-stone-600">
                 <span>Thermal Courier</span>
                 <span className="font-mono tabular-nums">
-                  {deliveryFee === 0 ? 'Free (Roxa Pass)' : `$${deliveryFee.toFixed(2)}`}
+                  {deliveryFee === 0 ? 'Free (Pass)' : `$${deliveryFee.toFixed(2)}`}
                 </span>
               </div>
             )}
             {passDiscount > 0 && (
               <div className="flex items-center justify-between text-[#2F6B3B]">
-                <span>Roxa Pass Free Bowl</span>
+                <span>Belly Good Pass Free Bowl</span>
                 <span className="font-mono tabular-nums">-${passDiscount.toFixed(2)}</span>
               </div>
             )}

@@ -76,7 +76,7 @@ export function HomeOrderView({
               <>
                 <div className="flex flex-wrap items-center gap-2 text-xs text-stone-500">
                   <span className="font-semibold text-[#3B1248]">
-                    {member.isRoxaPass ? 'Roxa Pass Member' : `${member.tier} Member`}
+                    {member.isRoxaPass ? 'Belly Good Pass Member' : `${member.tier} Member`}
                   </span>
                   <span aria-hidden="true">·</span>
                   <span>{member.tasteArchetype}</span>
@@ -189,7 +189,7 @@ export function HomeOrderView({
         ) : (
           <div className="mt-5 pt-4 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="text-xs text-stone-700">
-              <strong className="text-[#3B1248]">Don&rsquo;t pay full guest price:</strong> Join Roxa Club free in 10 seconds to unlock{' '}
+              <strong className="text-[#3B1248]">Don&rsquo;t pay full guest price:</strong> Join Belly Belly Good Club free in 10 seconds to unlock{' '}
               <strong className="font-semibold text-[#1C181F]">$3.00 welcome credit</strong>, member pricing on every bowl, and your 5-bowl reward card.
             </div>
             <button
