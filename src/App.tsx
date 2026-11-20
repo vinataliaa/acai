@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { BagCheckoutView } from './components/BagCheckoutView';
 import { BottomNav } from './components/BottomNav';
 import { BowlBuilderView } from './components/BowlBuilderView';
+import { CartDrawer } from './components/CartDrawer';
 import { ClubMembershipView } from './components/ClubMembershipView';
 import { FulfillmentModal } from './components/FulfillmentModal';
 import { HomeOrderView } from './components/HomeOrderView';
@@ -67,6 +67,7 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState<AppTab>('order');
   const [menuFilter, setMenuFilter] = useState<'all' | 'signature' | 'bundle'>('all');
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const [fulfillmentMode, setFulfillmentMode] = useState<FulfillmentMode>('collect');
   const [storeId, setStoreId] = useState<string>(initial.member.favoriteStoreId || 'hayes');
@@ -246,6 +247,7 @@ export default function App() {
       notes: payload.notes || undefined,
     });
     flashAdded(payload.item.id);
+    setIsCartOpen(true);
   };
 
   const handleQuickAddCustomBowl = (bowl: CustomBowl) => {
@@ -273,6 +275,7 @@ export default function App() {
       setMember((prev) => ({ ...prev, tasteArchetype: nextArchetype }));
     }
     handleQuickAddCustomBowl(bowl);
+    setIsCartOpen(true);
   };
 
   const handleUpdateQty = (id: string, delta: number) => {
@@ -384,6 +387,7 @@ export default function App() {
   };
 
   const handleJumpToBundles = () => {
+    setIsCartOpen(false);
     setMenuFilter('bundle');
     setActiveTab('order');
     setTimeout(() => {
@@ -407,7 +411,7 @@ export default function App() {
         quantity: item.quantity,
       });
     });
-    setActiveTab('bag');
+    setIsCartOpen(true);
   };
 
   const handleResetGuestDemo = () => {
@@ -421,8 +425,12 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-[#FAF9F6] text-[#1C181F]">
       <TopBar
         activeTab={activeTab}
-        onSelectTab={setActiveTab}
+        onSelectTab={(tab) => {
+          setIsCartOpen(false);
+          setActiveTab(tab);
+        }}
         onJumpToBundles={handleJumpToBundles}
+        onOpenCart={() => setIsCartOpen(true)}
         bagCount={bagCount}
         bagTotal={bagTotal}
         fulfillmentMode={fulfillmentMode}
@@ -434,6 +442,8 @@ export default function App() {
         {activeTab === 'order' && (
           <HomeOrderView
             member={member}
+            bag={bag}
+            activeOrder={activeOrder}
             fulfillmentMode={fulfillmentMode}
             selectedStore={selectedStore}
             selectedSlot={selectedSlot}
@@ -445,6 +455,8 @@ export default function App() {
             onOpenFulfillment={() => setIsFulfillmentOpen(true)}
             onSelectMenuItem={(item) => setSelectedMenuItem(item)}
             onQuickAddMenuItem={handleQuickAddMenuItem}
+            onUpdateQty={handleUpdateQty}
+            onOpenCart={() => setIsCartOpen(true)}
             customBowls={customBowls}
             onQuickAddCustomBowl={handleQuickAddCustomBowl}
             onOpenBuilder={() => setActiveTab('build')}
@@ -480,36 +492,10 @@ export default function App() {
             }
             onGoToCheckoutWithRedeem={() => {
               setApplyCredits(true);
-              setActiveTab('bag');
+              setIsCartOpen(true);
             }}
             onReorderOrder={handleReorderPastOrder}
             onResetGuestDemo={handleResetGuestDemo}
-          />
-        )}
-
-        {activeTab === 'bag' && (
-          <BagCheckoutView
-            bag={bag}
-            member={member}
-            fulfillmentMode={fulfillmentMode}
-            selectedStore={selectedStore}
-            selectedSlot={selectedSlot}
-            deliveryAddress={deliveryAddress}
-            dineInPreference={dineInPreference}
-            applyCredits={applyCredits}
-            onToggleApplyCredits={setApplyCredits}
-            applyRoxaPassPerk={applyRoxaPassPerk}
-            onToggleRoxaPassPerk={setApplyRoxaPassPerk}
-            onUpdateQty={handleUpdateQty}
-            onRemoveItem={handleRemoveItem}
-            onAddGreenJuiceAddon={handleAddGreenJuiceAddon}
-            onOpenFulfillment={() => setIsFulfillmentOpen(true)}
-            onOpenJoinSheet={openJoinSheet}
-            onPlaceOrder={handlePlaceOrder}
-            activeOrder={activeOrder}
-            onAdvanceOrderStage={handleAdvanceOrderStage}
-            onBrowseMenu={() => setActiveTab('order')}
-            onOpenBuilder={() => setActiveTab('build')}
           />
         )}
       </main>
@@ -521,7 +507,16 @@ export default function App() {
         </div>
       </footer>
 
-      <BottomNav activeTab={activeTab} onSelectTab={setActiveTab} bagCount={bagCount} />
+      <BottomNav
+        activeTab={activeTab}
+        isCartOpen={isCartOpen}
+        onSelectTab={(tab) => {
+          setIsCartOpen(false);
+          setActiveTab(tab);
+        }}
+        onOpenCart={() => setIsCartOpen(true)}
+        bagCount={bagCount}
+      />
 
       {isFulfillmentOpen && (
         <FulfillmentModal
@@ -551,6 +546,32 @@ export default function App() {
         onClose={() => setSelectedMenuItem(null)}
         onOpenJoinSheet={(reason) => openJoinSheet(reason, 3.0, 'free')}
         onAddToBag={handleAddDetailedMenuItem}
+      />
+
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        bag={bag}
+        member={member}
+        fulfillmentMode={fulfillmentMode}
+        selectedStore={selectedStore}
+        selectedSlot={selectedSlot}
+        deliveryAddress={deliveryAddress}
+        dineInPreference={dineInPreference}
+        applyCredits={applyCredits}
+        onToggleApplyCredits={setApplyCredits}
+        applyRoxaPassPerk={applyRoxaPassPerk}
+        onToggleRoxaPassPerk={setApplyRoxaPassPerk}
+        onUpdateQty={handleUpdateQty}
+        onRemoveItem={handleRemoveItem}
+        onAddGreenJuiceAddon={handleAddGreenJuiceAddon}
+        onOpenFulfillment={() => setIsFulfillmentOpen(true)}
+        onOpenJoinSheet={openJoinSheet}
+        onPlaceOrder={handlePlaceOrder}
+        activeOrder={activeOrder}
+        onAdvanceOrderStage={handleAdvanceOrderStage}
+        onBrowseMenu={() => setActiveTab('order')}
+        onOpenBuilder={() => setActiveTab('build')}
       />
 
       {joinSheetState.isOpen && (

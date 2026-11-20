@@ -5,6 +5,7 @@ interface TopBarProps {
   activeTab: AppTab;
   onSelectTab: (tab: AppTab) => void;
   onJumpToBundles: () => void;
+  onOpenCart: () => void;
   bagCount: number;
   bagTotal: number;
   fulfillmentMode: FulfillmentMode;
@@ -22,6 +23,7 @@ export function TopBar({
   activeTab,
   onSelectTab,
   onJumpToBundles,
+  onOpenCart,
   bagCount,
   bagTotal,
   fulfillmentMode,
@@ -80,7 +82,7 @@ export function TopBar({
         <div className="shrink-0">
           <button
             type="button"
-            onClick={() => onSelectTab('bag')}
+            onClick={onOpenCart}
             className="inline-flex items-center gap-2.5 min-h-[40px] px-4 py-2 rounded-xl bg-[#3B1248] text-white text-sm font-medium hover:bg-[#260A30] transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3B1248]"
           >
             <ShoppingBag className="w-4 h-4" strokeWidth={1.8} />

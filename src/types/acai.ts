@@ -1,6 +1,6 @@
 export type FulfillmentMode = 'dine-in' | 'collect' | 'delivery';
 
-export type AppTab = 'order' | 'build' | 'club' | 'bag';
+export type AppTab = 'order' | 'build' | 'club';
 
 export type BowlSizeId = 'regular' | 'large';
 
