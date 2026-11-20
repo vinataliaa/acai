@@ -257,6 +257,82 @@ export const INITIAL_MEMBER: MemberProfile = {
 
 export const INITIAL_ORDERS: OrderRecord[] = [];
 
+export interface TierDefinition {
+  id: 'Seed' | 'Harvest' | 'Crown';
+  name: string;
+  minBowls: number;
+  pointsRateLabel: string;
+  tagline: string;
+  perks: string[];
+}
+
+export const MEMBERSHIP_TIERS: TierDefinition[] = [
+  {
+    id: 'Seed',
+    name: 'Seed',
+    minBowls: 0,
+    pointsRateLabel: '2.5 pts / $1',
+    tagline: 'Entry ritual access unlocked on sign-up',
+    perks: [
+      '10% member pricing on all bowls & bundles',
+      '$3.00 welcome credit + 5-bowl Stamp Card ($8 reward)',
+      'Save & reorder custom-named signature bowls',
+    ],
+  },
+  {
+    id: 'Harvest',
+    name: 'Harvest',
+    minBowls: 10,
+    pointsRateLabel: '3.1 pts / $1 (+25%)',
+    tagline: 'Unlocks at 10 bowls enjoyed',
+    perks: [
+      'Everything in Seed plus +25% points earn rate',
+      'Priority 6-minute cold-blend prep queue',
+      'Complimentary drizzle or boost every 3rd order',
+    ],
+  },
+  {
+    id: 'Crown',
+    name: 'Crown',
+    minBowls: 20,
+    pointsRateLabel: '3.8 pts / $1 (+50%)',
+    tagline: 'Unlocks at 20 bowls enjoyed',
+    perks: [
+      'Everything in Harvest plus +50% points earn rate',
+      'Free Generous size upgrade on every 5th stamp',
+      'First reserve on small-lot Cupuaçu & seasonal harvests',
+    ],
+  },
+];
+
+export function getTierProgress(totalBowls: number) {
+  if (totalBowls >= 20) {
+    return {
+      currentTier: MEMBERSHIP_TIERS[2],
+      nextTier: null as TierDefinition | null,
+      bowlsIntoTier: totalBowls - 20,
+      bowlsNeededForNext: 0,
+      progressPercent: 100,
+    };
+  }
+  if (totalBowls >= 10) {
+    return {
+      currentTier: MEMBERSHIP_TIERS[1],
+      nextTier: MEMBERSHIP_TIERS[2],
+      bowlsIntoTier: totalBowls - 10,
+      bowlsNeededForNext: 20 - totalBowls,
+      progressPercent: Math.round(((totalBowls - 10) / 10) * 100),
+    };
+  }
+  return {
+    currentTier: MEMBERSHIP_TIERS[0],
+    nextTier: MEMBERSHIP_TIERS[1],
+    bowlsIntoTier: totalBowls,
+    bowlsNeededForNext: 10 - totalBowls,
+    progressPercent: Math.round((totalBowls / 10) * 100),
+  };
+}
+
 export function computeTasteArchetype(bowl: Pick<CustomBowl, 'baseId' | 'crunchIds' | 'drizzleIds' | 'boostIds' | 'fruitIds'>): string {
   if (bowl.baseId === 'cacao-blend' || bowl.crunchIds.includes('cacao-nibs')) {
     return 'Cacao Devotee';

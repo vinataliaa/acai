@@ -16,6 +16,7 @@ import {
   UtensilsCrossed,
   X,
 } from 'lucide-react';
+import { getTierProgress } from '../data/acaiData';
 import {
   CartItem,
   FulfillmentMode,
@@ -181,7 +182,11 @@ export function CartDrawer({
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-stone-200 bg-white shrink-0">
           <div>
             <p className="text-xs font-semibold text-[#3B1248]">
-              {activeOrder && bag.length === 0 ? 'Live Order Pass' : 'Bag Preview & Checkout'}
+              {activeOrder && bag.length === 0
+                ? 'Live Order Pass'
+                : member.isSignedUp
+                  ? `${getTierProgress(member.totalBowlsOrdered).currentTier.name} Tier · ${getTierProgress(member.totalBowlsOrdered).currentTier.pointsRateLabel}`
+                  : 'Bag Preview & Checkout'}
             </p>
             <h2 className="font-display text-xl font-semibold text-[#1C181F]">
               {activeOrder && bag.length === 0

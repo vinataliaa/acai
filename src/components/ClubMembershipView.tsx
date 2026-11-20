@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Award, Check, Flame, Pencil, RotateCcw, ShieldCheck, Sparkles, UserPlus } from 'lucide-react';
-import { STORE_LOCATIONS } from '../data/acaiData';
+import { Award, Check, Crown, Flame, Pencil, RotateCcw, ShieldCheck, Sparkles, UserPlus } from 'lucide-react';
+import { MEMBERSHIP_TIERS, STORE_LOCATIONS, getTierProgress } from '../data/acaiData';
 import { MemberProfile, OrderRecord } from '../types/acai';
 
 interface ClubMembershipViewProps {
@@ -17,6 +17,7 @@ interface ClubMembershipViewProps {
   onToggleRoxaPass: () => void;
   onGoToCheckoutWithRedeem: () => void;
   onReorderOrder: (order: OrderRecord) => void;
+  onPreviewTierBowls: (bowlCount: number) => void;
   onResetGuestDemo: () => void;
 }
 
@@ -28,6 +29,7 @@ export function ClubMembershipView({
   onToggleRoxaPass,
   onGoToCheckoutWithRedeem,
   onReorderOrder,
+  onPreviewTierBowls,
   onResetGuestDemo,
 }: ClubMembershipViewProps) {
   const [editingName, setEditingName] = useState(false);
@@ -265,10 +267,12 @@ export function ClubMembershipView({
     );
   }
 
+  const tierInfo = getTierProgress(member.totalBowlsOrdered);
+
   return (
     <div className="space-y-8 pb-10">
-      {/* Recognition Header */}
-      <section className="bg-white rounded-3xl border border-stone-200 p-6 sm:p-8">
+      {/* Recognition + Tier Progress Header */}
+      <section className="bg-white rounded-3xl border border-stone-200 p-6 sm:p-8 space-y-6">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
             <div className="flex flex-wrap items-center gap-2 text-xs text-stone-500">
@@ -346,10 +350,113 @@ export function ClubMembershipView({
                 {member.totalBowlsOrdered}
               </div>
               <div className="text-[11px] text-stone-500">
-                {Math.max(0, 10 - member.totalBowlsOrdered)} to Harvest tier
+                {tierInfo.nextTier
+                  ? `${tierInfo.bowlsNeededForNext} to ${tierInfo.nextTier.name} tier`
+                  : 'Crown tier unlocked'}
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Tier Progress Indicator Bar */}
+        <div className="pt-5 border-t border-stone-100 space-y-2.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2 font-semibold text-[#1C181F]">
+              <Crown className="w-4 h-4 text-[#3B1248]" />
+              <span>
+                {tierInfo.currentTier.name} Tier Active · {tierInfo.currentTier.pointsRateLabel}
+              </span>
+            </div>
+            <span className="text-stone-600 tabular-nums">
+              {tierInfo.nextTier
+                ? `${member.totalBowlsOrdered} / ${tierInfo.nextTier.minBowls} bowls toward ${tierInfo.nextTier.name} Tier`
+                : `${member.totalBowlsOrdered} bowls enjoyed · Top tier unlocked`}
+            </span>
+          </div>
+
+          <div className="h-2.5 w-full rounded-full bg-stone-100 overflow-hidden">
+            <div
+              className="h-full bg-[#3B1248] rounded-full transition-all duration-300"
+              style={{ width: `${Math.max(6, tierInfo.progressPercent)}%` }}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Membership Tier Ladder */}
+      <section aria-labelledby="membership-tiers-heading" className="space-y-4">
+        <div>
+          <h2 id="membership-tiers-heading" className="font-display text-xl sm:text-2xl font-semibold text-[#1C181F]">
+            Membership Tiers &amp; Perks
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-500 mt-0.5">
+            Every pre-order counts toward your tier status — unlocked tiers stay active for the full year
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {MEMBERSHIP_TIERS.map((tierDef) => {
+            const isCurrent = tierInfo.currentTier.id === tierDef.id;
+            const isUnlocked = member.totalBowlsOrdered >= tierDef.minBowls;
+            const bowlsAway = Math.max(0, tierDef.minBowls - member.totalBowlsOrdered);
+
+            return (
+              <div
+                key={tierDef.id}
+                className={`rounded-2xl border p-5 flex flex-col justify-between gap-4 transition-colors ${
+                  isCurrent
+                    ? 'bg-[#F4EFF6] border-[#3B1248]'
+                    : isUnlocked
+                      ? 'bg-white border-stone-200'
+                      : 'bg-white/70 border-stone-200'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 text-xs">
+                    <span className="font-mono font-semibold text-stone-500 tabular-nums">
+                      {tierDef.minBowls === 0 ? '0+ bowls' : `${tierDef.minBowls}+ bowls`}
+                    </span>
+                    <span
+                      className={`font-semibold ${
+                        isCurrent
+                          ? 'text-[#3B1248]'
+                          : isUnlocked
+                            ? 'text-[#2F6B3B]'
+                            : 'text-stone-500'
+                      }`}
+                    >
+                      {isCurrent
+                        ? 'Current Tier'
+                        : isUnlocked
+                          ? 'Unlocked'
+                          : `${bowlsAway} bowl${bowlsAway === 1 ? '' : 's'} away`}
+                    </span>
+                  </div>
+
+                  <h3 className="font-display text-xl font-semibold text-[#1C181F] mt-1.5">
+                    {tierDef.name} Tier
+                  </h3>
+                  <p className="text-xs font-medium text-[#3B1248] mt-0.5 tabular-nums">
+                    {tierDef.pointsRateLabel}
+                  </p>
+                  <p className="text-xs text-stone-500 mt-1">{tierDef.tagline}</p>
+
+                  <ul className="mt-4 space-y-2 text-xs text-stone-700">
+                    {tierDef.perks.map((perk) => (
+                      <li key={perk} className="flex items-start gap-2">
+                        <Check
+                          className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${
+                            isUnlocked ? 'text-[#3B1248]' : 'text-stone-400'
+                          }`}
+                        />
+                        <span>{perk}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -546,7 +653,25 @@ export function ClubMembershipView({
         </section>
       )}
 
-      <div className="pt-2 flex justify-end">
+      <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-stone-200/70">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-stone-500">
+          <span>Preview tier:</span>
+          {[
+            { label: 'Seed (1)', bowls: 1 },
+            { label: 'Harvest (12)', bowls: 12 },
+            { label: 'Crown (22)', bowls: 22 },
+          ].map((preset) => (
+            <button
+              key={preset.label}
+              type="button"
+              onClick={() => onPreviewTierBowls(preset.bowls)}
+              className="px-2.5 py-1 rounded-lg border border-stone-200 bg-white text-stone-700 hover:border-[#3B1248] hover:text-[#3B1248] transition-colors cursor-pointer"
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
+
         <button
           type="button"
           onClick={onResetGuestDemo}

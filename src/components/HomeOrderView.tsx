@@ -14,7 +14,7 @@ import {
   UserPlus,
   UtensilsCrossed,
 } from 'lucide-react';
-import { MENU_ITEMS } from '../data/acaiData';
+import { MENU_ITEMS, getTierProgress } from '../data/acaiData';
 import {
   CartItem,
   CustomBowl,
@@ -49,6 +49,8 @@ interface HomeOrderViewProps {
   onOpenBuilder: () => void;
   onOpenClub: () => void;
   onOpenJoinSheet: (reason?: string) => void;
+  showMemberBannerB: boolean;
+  onJoinNowClick: () => void;
   recentlyAddedId: string | null;
 }
 
@@ -74,6 +76,8 @@ export function HomeOrderView({
   onOpenBuilder,
   onOpenClub,
   onOpenJoinSheet,
+  showMemberBannerB,
+  onJoinNowClick,
   recentlyAddedId,
 }: HomeOrderViewProps) {
   const heroItem = MENU_ITEMS[0];
@@ -94,6 +98,7 @@ export function HomeOrderView({
 
   const firstName = member.isSignedUp && member.name ? member.name.split(' ')[0] : '';
   const primaryCustomBowl = customBowls[0];
+  const tierInfo = getTierProgress(member.totalBowlsOrdered);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -185,41 +190,77 @@ export function HomeOrderView({
           </div>
         </div>
 
-        {/* Sign-Up Conversion Strip (Guests) OR Streak/Loss-Avoidance Strip (Members) */}
+        {/* Sign-Up Conversion Strip (Guests) OR Tier + Streak Strip (Members) */}
         {member.isSignedUp ? (
-          <div className="mt-5 pt-4 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
-              <div className="flex items-center gap-2 text-[#1C181F]">
-                <Flame className="w-4 h-4 text-[#3B1248] shrink-0" />
-                <span>
-                  <strong className="font-semibold tabular-nums">
-                    {member.streakWeeks > 0 ? `${member.streakWeeks}-week streak` : 'Week 1 started'}
-                  </strong>
-                  {' '}— {member.streakDaysLeft} days left to keep your +25% bonus
-                </span>
+          <div className="mt-5 pt-4 border-t border-stone-100 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs">
+                <div className="flex items-center gap-2 text-[#1C181F]">
+                  <Flame className="w-4 h-4 text-[#3B1248] shrink-0" />
+                  <span>
+                    <strong className="font-semibold tabular-nums">
+                      {member.streakWeeks > 0 ? `${member.streakWeeks}-week streak` : 'Week 1 started'}
+                    </strong>
+                    {' '}— {member.streakDaysLeft} days left to keep your ritual bonus
+                  </span>
+                </div>
+                {member.welcomeCredit > 0 && (
+                  <div className="text-[#2F6B3B] font-semibold tabular-nums">
+                    ${member.welcomeCredit.toFixed(2)} welcome credit ready at checkout
+                  </div>
+                )}
+                {member.expiringPoints > 0 && (
+                  <div className="text-stone-600">
+                    <span className="font-mono font-semibold text-[#3B1248] tabular-nums">
+                      {member.expiringPoints} pts (${(member.expiringPoints / 20).toFixed(2)})
+                    </span>{' '}
+                    expiring in {member.expiringDaysLeft} days
+                  </div>
+                )}
               </div>
-              {member.welcomeCredit > 0 && (
-                <div className="text-[#2F6B3B] font-semibold tabular-nums">
-                  ${member.welcomeCredit.toFixed(2)} welcome credit ready at checkout
-                </div>
-              )}
-              {member.expiringPoints > 0 && (
-                <div className="text-stone-600">
-                  <span className="font-mono font-semibold text-[#3B1248] tabular-nums">
-                    {member.expiringPoints} pts (${(member.expiringPoints / 20).toFixed(2)})
-                  </span>{' '}
-                  expiring in {member.expiringDaysLeft} days
-                </div>
-              )}
+
+              <button
+                type="button"
+                onClick={onOpenClub}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#3B1248] hover:underline whitespace-nowrap shrink-0 cursor-pointer min-h-[36px]"
+              >
+                <span className="tabular-nums">Stamp card {member.stampCount}/5</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
             </div>
 
+            {/* Member Tier Indicator & Progress Bar */}
             <button
               type="button"
               onClick={onOpenClub}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#3B1248] hover:underline whitespace-nowrap shrink-0 cursor-pointer min-h-[36px]"
+              className="w-full p-3 rounded-xl bg-[#FAF9F6] border border-stone-200 hover:border-[#3B1248] transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-left cursor-pointer"
             >
-              <span className="tabular-nums">Stamp card {member.stampCount}/5</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <span className="font-semibold text-[#3B1248]">
+                  {tierInfo.currentTier.name} Tier
+                </span>
+                <span aria-hidden="true" className="text-stone-400">·</span>
+                <span className="text-stone-600 tabular-nums">
+                  {tierInfo.currentTier.pointsRateLabel}
+                </span>
+                <span aria-hidden="true" className="text-stone-400">·</span>
+                <span className="text-stone-700 tabular-nums">
+                  {tierInfo.nextTier
+                    ? `${tierInfo.bowlsNeededForNext} bowl${tierInfo.bowlsNeededForNext === 1 ? '' : 's'} to ${tierInfo.nextTier.name} Tier`
+                    : 'Highest tier unlocked'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2.5 sm:w-48 shrink-0">
+                <div className="flex-1 h-1.5 rounded-full bg-stone-200 overflow-hidden">
+                  <div
+                    className="h-full bg-[#3B1248] rounded-full transition-all"
+                    style={{ width: `${tierInfo.progressPercent}%` }}
+                  />
+                </div>
+                <span className="font-mono text-[11px] font-semibold text-[#3B1248] tabular-nums">
+                  {tierInfo.nextTier ? `${member.totalBowlsOrdered}/${tierInfo.nextTier.minBowls}` : 'Max'}
+                </span>
+              </div>
             </button>
           </div>
         ) : (
@@ -241,6 +282,30 @@ export function HomeOrderView({
           </div>
         )}
       </section>
+
+      {/* Tested Element (Version B only): Encourage customers to sign up as members */}
+      {showMemberBannerB && !member.isSignedUp && (
+        <section
+          aria-label="Member sign-up invitation"
+          className="bg-[#3B1248] text-white rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        >
+          <div className="space-y-1">
+            <h2 className="font-display text-lg sm:text-xl font-semibold leading-snug">
+              Join Belly Belly Good membership before you check out
+            </h2>
+            <p className="text-xs sm:text-sm text-white/85 leading-relaxed">
+              Sign up in seconds to unlock 10% member pricing on every bowl and bundle, claim your $3.00 welcome credit, and keep every stamp from today&rsquo;s order.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onJoinNowClick}
+            className="min-h-[46px] px-6 py-2.5 rounded-xl bg-white text-[#3B1248] text-sm font-semibold hover:bg-stone-100 active:scale-[0.99] transition-all whitespace-nowrap shrink-0 cursor-pointer"
+          >
+            Join now
+          </button>
+        </section>
+      )}
 
       {/* Inline Live Bag Preview (on the same page, no page switch) */}
       {bag.length > 0 && (

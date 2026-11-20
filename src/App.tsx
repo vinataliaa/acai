@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BottomNav } from './components/BottomNav';
 import { BowlBuilderView } from './components/BowlBuilderView';
 import { CartDrawer } from './components/CartDrawer';
@@ -8,6 +8,7 @@ import { HomeOrderView } from './components/HomeOrderView';
 import { ItemDetailSheet } from './components/ItemDetailSheet';
 import { MemberJoinSheet } from './components/MemberJoinSheet';
 import { TopBar } from './components/TopBar';
+import { variant, track, consent, setConsent, loadClarity, type Variant } from './pt';
 import {
   BASE_OPTIONS,
   INITIAL_CUSTOM_BOWLS,
@@ -64,6 +65,9 @@ function loadInitialState(): PersistedState {
 
 export default function App() {
   const [initial] = useState<PersistedState>(() => loadInitialState());
+  const [abVariant] = useState<Variant>(() => variant());
+  const [consentChoice, setConsentChoice] = useState<'granted' | 'denied' | null>(() => consent());
+  const didMountTrackRef = useRef(false);
 
   const [activeTab, setActiveTab] = useState<AppTab>('order');
   const [menuFilter, setMenuFilter] = useState<'all' | 'signature' | 'bundle'>('all');
@@ -96,6 +100,15 @@ export default function App() {
   const [applyCredits, setApplyCredits] = useState(true);
   const [applyRoxaPassPerk, setApplyRoxaPassPerk] = useState(true);
   const [activeOrder, setActiveOrder] = useState<OrderRecord | null>(null);
+
+  useEffect(() => {
+    if (didMountTrackRef.current) return;
+    didMountTrackRef.current = true;
+    if (consent() === 'granted') {
+      loadClarity();
+    }
+    track('screen_view');
+  }, []);
 
   useEffect(() => {
     try {
@@ -172,6 +185,7 @@ export default function App() {
       favoriteStoreId: payload.favoriteStoreId || prev.favoriteStoreId,
     }));
     setApplyCredits(true);
+    track('goal_complete');
   };
 
   const addCartItem = (newItem: Omit<CartItem, 'id'> & { id?: string }) => {
@@ -462,6 +476,11 @@ export default function App() {
             onOpenBuilder={() => setActiveTab('build')}
             onOpenClub={() => setActiveTab('club')}
             onOpenJoinSheet={(reason) => openJoinSheet(reason, 3.0, 'free')}
+            showMemberBannerB={abVariant === 'B'}
+            onJoinNowClick={() => {
+              track('cta_click');
+              openJoinSheet('Unlock 10% member pricing + $3.00 welcome credit before you check out', 3.0, 'free');
+            }}
             recentlyAddedId={recentlyAddedId}
           />
         )}
@@ -495,6 +514,14 @@ export default function App() {
               setIsCartOpen(true);
             }}
             onReorderOrder={handleReorderPastOrder}
+            onPreviewTierBowls={(bowlCount) => {
+              const nextTier = bowlCount >= 20 ? 'Crown' : bowlCount >= 10 ? 'Harvest' : 'Seed';
+              setMember((prev) => ({
+                ...prev,
+                totalBowlsOrdered: bowlCount,
+                tier: nextTier,
+              }));
+            }}
             onResetGuestDemo={handleResetGuestDemo}
           />
         )}
@@ -583,6 +610,39 @@ export default function App() {
           initialPlan={joinSheetState.initialPlan}
           onCompleteSignup={handleCompleteSignup}
         />
+      )}
+
+      {consentChoice === null && (
+        <aside
+          aria-label="Experiment consent notice"
+          className="fixed bottom-16 lg:bottom-4 left-4 right-4 z-40 max-w-3xl mx-auto bg-white rounded-2xl border border-stone-200 p-4 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+        >
+          <p className="text-xs text-stone-700 leading-relaxed">
+            This class prototype records which version you saw and what you pressed, to test a design. Nothing about your visit leaves this browser unless you agree.
+          </p>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setConsent('granted');
+                setConsentChoice('granted');
+              }}
+              className="flex-1 sm:flex-none min-w-[96px] min-h-[44px] px-4 py-2 rounded-xl bg-[#3B1248] text-white text-xs font-semibold hover:bg-[#260A30] transition-colors cursor-pointer"
+            >
+              Accept
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setConsent('denied');
+                setConsentChoice('denied');
+              }}
+              className="flex-1 sm:flex-none min-w-[96px] min-h-[44px] px-4 py-2 rounded-xl bg-[#3B1248] text-white text-xs font-semibold hover:bg-[#260A30] transition-colors cursor-pointer"
+            >
+              Decline
+            </button>
+          </div>
+        </aside>
       )}
     </div>
   );
