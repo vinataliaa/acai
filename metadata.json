@@ -1,0 +1,6 @@
+{
+  "name": "Roxa Açai House",
+  "description": "Pre-order wild Amazonian açai bowls, custom signature blends, and curated bundles for dine-in, store collection, or delivery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
