@@ -66,57 +66,71 @@ export function ItemDetailSheet({
       aria-modal="true"
       aria-label={item.name}
     >
-      <div className="w-full lg:max-w-2xl bg-[#FAF9F6] rounded-t-3xl lg:rounded-3xl border border-stone-200 max-h-[90vh] flex flex-col overflow-hidden">
-        <div className="lg:hidden pt-3 pb-1 flex justify-center bg-white">
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute inset-0 cursor-default"
+        aria-label="Dismiss item details"
+      />
+
+      <div className="relative z-10 w-full lg:max-w-2xl bg-[#FAF9F6] rounded-t-3xl lg:rounded-3xl border border-stone-200 max-h-[92vh] flex flex-col overflow-hidden">
+        <div className="lg:hidden pt-3 pb-1 flex justify-center bg-white shrink-0">
           <div className="w-10 h-1.5 bg-stone-300 rounded-full" />
         </div>
 
-        <div className="relative h-56 sm:h-64 w-full bg-stone-100 shrink-0 overflow-hidden">
-          <BowlImage src={item.image} alt={item.name} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        {/* Compact Sticky Sheet Header */}
+        <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-stone-200 bg-white shrink-0">
+          <div className="min-w-0">
+            <h2 className="font-display text-lg sm:text-xl font-semibold text-[#1C181F] truncate">
+              {item.name}
+            </h2>
+            <p className="text-[11px] text-stone-500 truncate tabular-nums">
+              {item.flavorNotes.join(' · ')} · {displayKcal} kcal
+            </p>
+          </div>
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-3 right-3 min-h-[44px] min-w-[44px] rounded-full bg-white/90 text-[#1C181F] flex items-center justify-center hover:bg-white transition-colors cursor-pointer"
+            className="min-h-[44px] min-w-[44px] rounded-xl text-stone-500 hover:text-[#1C181F] hover:bg-stone-100 flex items-center justify-center transition-colors cursor-pointer shrink-0"
             aria-label="Close item details"
           >
             <X className="w-5 h-5" />
           </button>
-          <div className="absolute bottom-4 left-5 right-5 text-white">
-            <p className="text-xs text-white/85">{item.harvestOrigin}</p>
-            <h2 className="font-display text-2xl sm:text-3xl font-semibold mt-1 leading-tight">
-              {item.name}
-            </h2>
-          </div>
         </div>
 
-        <div className="p-5 overflow-y-auto space-y-5">
-          <div>
-            <div className="flex items-center justify-between text-xs text-stone-500">
-              <span>{item.flavorNotes.join(' · ')}</span>
-              <span className="font-mono tabular-nums">{displayKcal} kcal</span>
+        {/* Unified Scrollable Body (Image scrolls away cleanly so customization has full space) */}
+        <div className="flex-1 p-5 overflow-y-auto overscroll-contain space-y-5">
+          <div className="flex flex-col sm:flex-row gap-4 items-start bg-white rounded-2xl border border-stone-200 p-3.5">
+            <div className="w-full sm:w-36 h-32 sm:h-28 rounded-xl overflow-hidden bg-stone-100 shrink-0">
+              <BowlImage src={item.image} alt={item.name} className="w-full h-full object-cover" />
             </div>
-            <p className="text-sm text-stone-700 leading-relaxed mt-2.5">{item.description}</p>
-            {!isMember && (
-              <div className="mt-3 p-3 rounded-xl bg-[#F4EFF6] border border-[#3B1248]/15 flex items-center justify-between gap-3">
-                <span className="text-xs text-[#3B1248] font-medium tabular-nums">
-                  Member price: <strong>${memberUnitPrice.toFixed(2)}</strong> (save $
-                  {(guestUnitPrice - memberUnitPrice).toFixed(2)} + $3.00 welcome credit)
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onClose();
-                    onOpenJoinSheet(`Get ${item.name} at the $${memberUnitPrice.toFixed(2)} member price`);
-                  }}
-                  className="text-xs font-semibold text-[#3B1248] underline whitespace-nowrap shrink-0 cursor-pointer inline-flex items-center gap-1"
-                >
-                  <UserPlus className="w-3.5 h-3.5" />
-                  <span>Join Free</span>
-                </button>
-              </div>
-            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-medium text-[#3B1248]">{item.harvestOrigin}</p>
+              <p className="text-xs sm:text-sm text-stone-700 leading-relaxed mt-1">
+                {item.description}
+              </p>
+            </div>
           </div>
+
+          {!isMember && (
+            <div className="p-3 rounded-xl bg-[#F4EFF6] border border-[#3B1248]/15 flex items-center justify-between gap-3">
+              <span className="text-xs text-[#3B1248] font-medium tabular-nums">
+                Member price: <strong>${memberUnitPrice.toFixed(2)}</strong> (save $
+                {(guestUnitPrice - memberUnitPrice).toFixed(2)} + $3.00 welcome credit)
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenJoinSheet(`Get ${item.name} at the $${memberUnitPrice.toFixed(2)} member price`);
+                }}
+                className="text-xs font-semibold text-[#3B1248] underline whitespace-nowrap shrink-0 cursor-pointer inline-flex items-center gap-1"
+              >
+                <UserPlus className="w-3.5 h-3.5" />
+                <span>Join Free</span>
+              </button>
+            </div>
+          )}
 
           {item.includedItems && (
             <div className="border-t border-stone-200 pt-4">
@@ -202,7 +216,7 @@ export function ItemDetailSheet({
             </>
           )}
 
-          <div className="border-t border-stone-200 pt-4">
+          <div className="border-t border-stone-200 pt-4 pb-2">
             <label htmlFor="item-prep-note" className="block text-xs font-semibold text-stone-800 mb-1.5">
               Preparation Note (Optional)
             </label>
@@ -218,7 +232,7 @@ export function ItemDetailSheet({
           </div>
         </div>
 
-        <div className="p-4 bg-white border-t border-stone-200 flex items-center gap-3">
+        <div className="p-4 bg-white border-t border-stone-200 flex items-center gap-3 shrink-0">
           <div className="flex items-center border border-stone-200 rounded-xl bg-[#FAF9F6]">
             <button
               type="button"
